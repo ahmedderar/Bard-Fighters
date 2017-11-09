@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "648251727133",
+    "firebase_url": "https://bard-fighters.firebaseio.com",
+    "project_id": "bard-fighters",
+    "storage_bucket": "bard-fighters.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648251727133:android:4e4ff816a9ea07f5",
+        "android_client_info": {
+          "package_name": "adirar.hope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648251727133-vs9siflfflstsre75nmi8dr2bh16k7e2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq4EsVeqUAFbfdxXMXg3A5hALfHkwIJR4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
