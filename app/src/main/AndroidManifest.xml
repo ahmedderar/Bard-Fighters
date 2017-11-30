@@ -22,7 +22,8 @@
         <activity
             android:name=".ReportsActivity"
             android:label="@string/title_activity_reports"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ReportDetailActivity"></activity>
     </application>
 
 </manifest>

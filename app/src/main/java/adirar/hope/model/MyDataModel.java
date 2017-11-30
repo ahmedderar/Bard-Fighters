@@ -1,12 +1,15 @@
 package adirar.hope.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import adirar.hope.util.Keys;
 
-public class MyDataModel implements ModelInterface{
+public class MyDataModel implements ModelInterface,Parcelable{
 
     private String name;
     private String date;
@@ -18,7 +21,7 @@ public class MyDataModel implements ModelInterface{
     private String shelterStatus;
 
     //Responders for Report UserName
-    private ArrayList<String> responders;
+    private String responders;
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
@@ -85,9 +88,14 @@ public class MyDataModel implements ModelInterface{
     }
 
     public void addResponder(String responder){
-        responders.add(responder);
+        if (responders != null)
+        responders += responder + ",";
+        else responders = responder;
     }
-    public ArrayList<String> getResponders(){
+    public void setResponders(String responders){
+        this.responders = responders;
+    }
+    public String getResponders(){
         return responders;
     }
 
@@ -106,14 +114,20 @@ public class MyDataModel implements ModelInterface{
         result.put(Keys.KEY_NEARESTBRANCH,nearestBranch);
         result.put(Keys.KEY_TYPE,type);
         result.put(Keys.KEY_SHELTER_STATUS,shelterStatus);
-        if (responders.size() >= 1){
-            for (String responder:responders){
-                temp += responder + ",";
-            }
-            temp = temp.substring(0,(temp.length()-1));
-            result.put(Keys.KEY_RESPONDERS,temp);
+        if (responders.length() >= 1){
+            responders = responders.substring(0,(responders.length()-1));
+            result.put(Keys.KEY_RESPONDERS,responders);
         }
 
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 9;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

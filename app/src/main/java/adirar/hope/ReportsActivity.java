@@ -1,6 +1,7 @@
 package adirar.hope;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -59,6 +60,14 @@ public class ReportsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Snackbar.make(findViewById(R.id.parentLayout), list.get(position).getName() + " => " + list.get(position).getDate(), Snackbar.LENGTH_LONG).show();
+               //Starting the report Detail
+                MyDataModel currentModel = list.get(position);
+                Intent i = new Intent(ReportsActivity.this,ReportDetailActivity.class);
+                Bundle b = new Bundle();
+                b.putParcelable(Keys.KEY_RESPONDERS,currentModel);
+                i.putExtras(b);
+             //   i.setClass(ReportsActivity.this, ReportDetailActivity.class);
+                startActivity(i);
             }
         });
 
