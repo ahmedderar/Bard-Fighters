@@ -12,6 +12,7 @@ public class Keys {
     public static final String KEY_NEARESTBRANCH = "nearestBranch";
     public static final String KEY_TYPE = "type";
     public static final String KEY_SHELTER_STATUS = "shelterStatus";
+    public static final String KEY_RESPONDERS = "responders";
   //  public static final String KEY_IMAGE = "image";
 
 }

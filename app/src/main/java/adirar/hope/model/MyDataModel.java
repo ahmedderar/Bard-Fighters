@@ -1,8 +1,12 @@
 package adirar.hope.model;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import adirar.hope.util.Keys;
 
-public class MyDataModel {
+public class MyDataModel implements ModelInterface{
 
     private String name;
     private String date;
@@ -12,6 +16,9 @@ public class MyDataModel {
     private String nearestBranch;
     private String type;
     private String shelterStatus;
+
+    //Responders for Report UserName
+    private ArrayList<String> responders;
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
@@ -77,7 +84,36 @@ public class MyDataModel {
         this.date = date;
     }
 
+    public void addResponder(String responder){
+        responders.add(responder);
+    }
+    public ArrayList<String> getResponders(){
+        return responders;
+    }
 
 
+    @Override
+    public Map<String, Object> toMap() {
 
+        String temp = "";
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(Keys.KEY_NAME,name);
+        result.put(Keys.KEY_DATE,date);
+        result.put(Keys.KEY_ADDRESS, address);
+        result.put(Keys.KEY_PHONE,phoneNo);
+        result.put(Keys.KEY_AREZONE,areaZone);
+        result.put(Keys.KEY_NEARESTBRANCH,nearestBranch);
+        result.put(Keys.KEY_TYPE,type);
+        result.put(Keys.KEY_SHELTER_STATUS,shelterStatus);
+        if (responders.size() >= 1){
+            for (String responder:responders){
+                temp += responder + ",";
+            }
+            temp = temp.substring(0,(temp.length()-1));
+            result.put(Keys.KEY_RESPONDERS,temp);
+        }
+
+        return result;
+    }
 }
