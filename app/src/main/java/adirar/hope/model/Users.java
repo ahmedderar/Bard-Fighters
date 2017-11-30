@@ -9,6 +9,13 @@ import java.util.Map;
 public class Users implements ModelInterface {
     private String address, email, name, password, phone;
 
+    public Users() {
+        name = "";
+        password= "";
+        phone= "";
+        address= "";
+    }
+
     public String getAddress() {
         return address;
     }

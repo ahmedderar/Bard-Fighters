@@ -15,6 +15,10 @@ public class Volunteer extends Users{
     private String division;
     private ArrayList<Schadual> avaliableTimes;
 
+    public Volunteer() {
+        super();
+    }
+
     public String getNearestBranch() {
         return nearestBranch;
     }
@@ -51,19 +55,21 @@ public class Volunteer extends Users{
     @Override
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("name", getName());
-        result.put("password", getPassword());
-        result.put("address", getAddress());
-        result.put("email", getEmail());
-        result.put("phone", getPhone());
+        result.put("name",super.getName());
+        result.put("password", super.getPassword());
+        result.put("address", super.getAddress());
+        result.put("email", super.getEmail());
+        result.put("phone", super.getPhone());
         //Volunteer Data
         result.put("activity",vActivity);
         result.put("nearest_branch",nearestBranch);
+        /**
         String string = "";
         for (Schadual s:avaliableTimes){
             string += s.getDay() + "," +s.getStartTime()+","+s.getEndTime()+",*,";
         }
         result.put("avaliable_times",string);
+         **/
 
         return result;
 

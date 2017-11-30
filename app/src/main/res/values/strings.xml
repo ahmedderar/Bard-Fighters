@@ -2,4 +2,21 @@
     <string name="app_name">Hope</string>
     <string name="organizer">Organizer</string>
     <string name="volunteer">Volunteer</string>
+    <string name="sign_up">sign up</string>
+    <string name="login">login</string>
+    <string name="user_name">user name</string>
+    <string name="division">Division</string>
+    <string-array name="branches">
+        <item>Dokki</item>
+        <item>Naser City</item>
+        <item>Maddie</item>
+        <item>Mohandessen</item>
+        <item>Shobra</item>
+    </string-array>
+    <string-array name="division">
+        <item>kashf Halat</item>
+        <item>prepare Food</item>
+        <item>Other</item>
+    </string-array>
+    <string name="title_activity_reports">ReportsActivity</string>
 </resources>
