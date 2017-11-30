@@ -1,27 +1,18 @@
 package adirar.hope;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
-import adirar.hope.model.AddInterface;
 import adirar.hope.model.MyDataModel;
-import adirar.hope.model.RetrieveInterface;
-import adirar.hope.util.Keys;
-import adirar.hope.utils.HelperMethods;
+import adirar.hope.model.TransferData;
 
-public class ReportDetailActivity extends AppCompatActivity implements RetrieveInterface,AddInterface{
+public class ReportDetailActivity extends AppCompatActivity{
     MyDataModel myDataModel;
     TextView tvName;
     TextView tvDate;
@@ -43,9 +34,14 @@ public class ReportDetailActivity extends AppCompatActivity implements RetrieveI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_detail);
 
+       /**
         Bundle b = this.getIntent().getExtras();
         if (b != null)
             myDataModel = b.getParcelable(Keys.KEY_RESPONDERS);
+       **/
+       Log.i("ReportDetailActivity","activity created");
+        myDataModel = TransferData.transModel;
+        Log.i("ReportDetailActivity","dataModel");
 
         tvName = (TextView) findViewById(R.id.tv_report_name);
         tvName.setText( myDataModel.getName());
@@ -70,14 +66,15 @@ public class ReportDetailActivity extends AppCompatActivity implements RetrieveI
 
 
         // FireBase get responders
-        HelperMethods.getData(this,"reports","Please Waiting","Loading");
+    //    HelperMethods.getData(this,"reports","Please Waiting","Loading");
 
-        responderArrayList = getSeperateRespond(myDataModel.getResponders());
+      /**
+       responderArrayList = getSeperateRespond(myDataModel.getResponders());
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, responderArrayList);
         lvResponders = (ListView) findViewById(R.id.lv_report_responders);
         lvResponders.setAdapter(adapter);
-
+            **/
     }
 
     private ArrayList<String> getSeperateRespond(String respons){
@@ -89,6 +86,7 @@ public class ReportDetailActivity extends AppCompatActivity implements RetrieveI
     return result;
     }
 
+    /**
     @Override
     public void updateUI(DataSnapshot data) {
         Log.i("update ui", "updateUI: " + data.toString());
@@ -128,4 +126,6 @@ public class ReportDetailActivity extends AppCompatActivity implements RetrieveI
             finish();
         }
     }
-}
+
+    **/
+    }

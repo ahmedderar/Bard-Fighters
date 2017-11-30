@@ -1,15 +1,12 @@
 package adirar.hope.model;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import adirar.hope.util.Keys;
 
-public class MyDataModel implements ModelInterface,Parcelable{
+public class MyDataModel implements ModelInterface{
 
     private String name;
     private String date;
@@ -122,12 +119,5 @@ public class MyDataModel implements ModelInterface,Parcelable{
         return result;
     }
 
-    @Override
-    public int describeContents() {
-        return 9;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
 }

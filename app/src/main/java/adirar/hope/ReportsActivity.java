@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import adirar.hope.adapter.MyArrayAdapter;
 import adirar.hope.model.MyDataModel;
+import adirar.hope.model.TransferData;
 import adirar.hope.parser.JSONParser;
 import adirar.hope.util.InternetConnection;
 import adirar.hope.util.Keys;
@@ -59,15 +60,20 @@ public class ReportsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("ReportsActivity","Item Just Clicked");
                 Snackbar.make(findViewById(R.id.parentLayout), list.get(position).getName() + " => " + list.get(position).getDate(), Snackbar.LENGTH_LONG).show();
                //Starting the report Detail
                 MyDataModel currentModel = list.get(position);
+                Log.i("ReportsActivity","item Clicked");
+                TransferData.transModel = currentModel;
                 Intent i = new Intent(ReportsActivity.this,ReportDetailActivity.class);
+                /**
                 Bundle b = new Bundle();
                 b.putParcelable(Keys.KEY_RESPONDERS,currentModel);
                 i.putExtras(b);
              //   i.setClass(ReportsActivity.this, ReportDetailActivity.class);
-                startActivity(i);
+                **/
+                 startActivity(i);
             }
         });
 
