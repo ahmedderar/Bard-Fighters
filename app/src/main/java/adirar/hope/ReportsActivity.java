@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,16 +27,20 @@ import java.util.ArrayList;
 
 import adirar.hope.adapter.MyArrayAdapter;
 import adirar.hope.model.MyDataModel;
+import adirar.hope.model.RetrieveInterface;
 import adirar.hope.model.TransferData;
 import adirar.hope.parser.JSONParser;
 import adirar.hope.util.InternetConnection;
 import adirar.hope.util.Keys;
+import adirar.hope.utils.HelperMethods;
 
-public class ReportsActivity extends AppCompatActivity {
+public class ReportsActivity extends AppCompatActivity implements RetrieveInterface{
 
     private ListView listView;
     private ArrayList<MyDataModel> list;
     private MyArrayAdapter adapter;
+
+    private MyDataModel gDataModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +63,21 @@ public class ReportsActivity extends AppCompatActivity {
          */
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+        // On Item Clicked
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("ReportsActivity","Item Just Clicked");
                 Snackbar.make(findViewById(R.id.parentLayout), list.get(position).getName() + " => " + list.get(position).getDate(), Snackbar.LENGTH_LONG).show();
                //Starting the report Detail
-                MyDataModel currentModel = list.get(position);
+              //  MyDataModel currentModel
+                       gDataModel = list.get(position);
                 Log.i("ReportsActivity","item Clicked");
-                TransferData.transModel = currentModel;
+
+                // FireBase get responders
+                HelperMethods.getData(ReportsActivity.this,"reports","Please Waiting","Loading");
+
+               // TransferData.transModel = currentModel;
                 Intent i = new Intent(ReportsActivity.this,ReportDetailActivity.class);
                 /**
                 Bundle b = new Bundle();
@@ -230,6 +242,26 @@ public class ReportsActivity extends AppCompatActivity {
             } else {
                 Snackbar.make(findViewById(R.id.parentLayout), "No Data Found", Snackbar.LENGTH_LONG).show();
             }
+        }
+    }
+
+    @Override
+    public void updateUI(DataSnapshot data) {
+        Log.i("update ui", "updateUI: " + data.toString());
+
+        boolean isExist = false;
+        for (DataSnapshot currentChild : data.getChildren()) {
+
+        MyDataModel currentModel = currentChild.getValue(MyDataModel.class);
+            if (currentModel.getName().equals(gDataModel.getName()) && currentModel.getResponders() != null) {
+                isExist = true;
+                TransferData.transModel = currentModel;
+                break;
+            }
+        }
+
+        if (!isExist) {
+            TransferData.transModel = gDataModel;
         }
     }
 

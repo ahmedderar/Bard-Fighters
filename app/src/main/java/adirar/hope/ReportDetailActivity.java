@@ -11,18 +11,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
 import adirar.hope.model.AddInterface;
 import adirar.hope.model.MyDataModel;
-import adirar.hope.model.RetrieveInterface;
 import adirar.hope.model.TransferData;
 import adirar.hope.utils.HelperMethods;
 
-public class ReportDetailActivity extends AppCompatActivity implements AddInterface,RetrieveInterface{
+public class ReportDetailActivity extends AppCompatActivity implements AddInterface{
     MyDataModel myDataModel;
     TextView tvName;
     TextView tvDate;
@@ -45,12 +43,12 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_detail);
 
-        Log.i("ReportDetailActivity","activity created");
+        Log.i("ReportDetailActivity", "activity created");
         myDataModel = TransferData.transModel;
-        Log.i("ReportDetailActivity","dataModel");
+        Log.i("ReportDetailActivity", "dataModel");
 
 
-       //Respond btn Clicked
+        //Respond btn Clicked
         btnRespond = (Button) findViewById(R.id.btn_report_respond);
         btnRespond.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,49 +61,50 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
             }
         });
 
-       /**
-        Bundle b = this.getIntent().getExtras();
-        if (b != null)
-            myDataModel = b.getParcelable(Keys.KEY_RESPONDERS);
-       **/
+        /**
+         Bundle b = this.getIntent().getExtras();
+         if (b != null)
+         myDataModel = b.getParcelable(Keys.KEY_RESPONDERS);
+         **/
+        if (myDataModel != null) {
+
+            tvName = (TextView) findViewById(R.id.tv_report_name);
+            tvName.setText(myDataModel.getName());
+
+            tvDate = (TextView) findViewById(R.id.tv_report_date);
+            tvDate.setText(myDataModel.getDate());
+
+            tvPhone = (TextView) findViewById(R.id.tv_report_phone);
+            tvPhone.setText(myDataModel.getPhoneNo());
+
+            tvAddress = (TextView) findViewById(R.id.tv_report_address);
+            tvAddress.setText(myDataModel.getAddress());
+
+            tvareaZone = (TextView) findViewById(R.id.tv_report_areazone);
+            tvareaZone.setText(myDataModel.getAreaZone());
+
+            tvNearestBranch = (TextView) findViewById(R.id.tv_report_nearestbranch);
+            tvNearestBranch.setText(myDataModel.getNearestBranch());
+
+            tvShelterStatus = (TextView) findViewById(R.id.tv_report_shelterstatus);
+            tvShelterStatus.setText(myDataModel.getShelterStatus());
+
+            tvType = (TextView) findViewById(R.id.tv_report_type);
+            tvType.setText(myDataModel.getType());
 
 
-        tvName = (TextView) findViewById(R.id.tv_report_name);
-        tvName.setText( myDataModel.getName());
-
-        tvDate = (TextView) findViewById(R.id.tv_report_date);
-        tvDate.setText( myDataModel.getDate());
-
-        tvPhone = (TextView) findViewById(R.id.tv_report_phone);
-        tvPhone.setText( myDataModel.getPhoneNo());
-
-        tvAddress = (TextView) findViewById(R.id.tv_report_address);
-        tvAddress.setText( myDataModel.getAddress());
-
-        tvareaZone = (TextView) findViewById(R.id.tv_report_areazone);
-        tvareaZone.setText( myDataModel.getAreaZone());
-
-        tvNearestBranch = (TextView) findViewById(R.id.tv_report_nearestbranch);
-        tvNearestBranch.setText( myDataModel.getNearestBranch());
-
-        tvShelterStatus = (TextView) findViewById(R.id.tv_report_shelterstatus);
-        tvShelterStatus.setText( myDataModel.getShelterStatus());
-
-        tvType = (TextView) findViewById(R.id.tv_report_type);
-        tvType.setText( myDataModel.getType());
+            // FireBase get responders
+            //  HelperMethods.getData(this,"reports","Please Waiting","Loading");
 
 
-        // FireBase get responders
-        HelperMethods.getData(this,"reports","Please Waiting","Loading");
+            // responderArrayList = getSeperateRespond(myDataModel.getResponders());
+            responderArrayList = getSeperateRespond(myDataModel.getResponders());
 
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, responderArrayList);
+            lvResponders = (ListView) findViewById(R.id.lv_report_responders);
+            lvResponders.setAdapter(adapter);
 
-      // responderArrayList = getSeperateRespond(myDataModel.getResponders());
-        responderArrayList = getSeperateRespond(TransferData.transModel.getResponders());
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, responderArrayList);
-        lvResponders = (ListView) findViewById(R.id.lv_report_responders);
-        lvResponders.setAdapter(adapter);
-
+        }
     }
 
     private ArrayList<String> getSeperateRespond(String respons){
@@ -118,30 +117,7 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
     }
 
 
-    @Override
-    public void updateUI(DataSnapshot data) {
-        Log.i("update ui", "updateUI: " + data.toString());
-        MyDataModel currentModel =null;
-        boolean isExist = false;
-        for (DataSnapshot currentChild : data.getChildren()) {
 
-           currentModel = currentChild.getValue(MyDataModel.class);
-            if (currentModel.getResponders() != null) {
-                isExist = true;
-//              //  Constants.currentUser= currentUser;
-                break;
-            }
-        }
-
-        if (isExist) {
-        //There is data responder in
-      //  myDataModel.setResponders(currentModel.getResponders());
-        TransferData.transModel.setResponders(currentModel.getResponders());
-        } else {
-            //No Responders
-            lvResponders.setVisibility(View.INVISIBLE);
-        }
-    }
 
 
 
