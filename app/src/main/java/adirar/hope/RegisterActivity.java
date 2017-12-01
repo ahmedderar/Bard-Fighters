@@ -66,7 +66,8 @@ public class RegisterActivity extends AppCompatActivity implements AddInterface 
         divisionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                division = parent.getItemAtPosition(position).toString();
+                division = parent.getItemAtPosition
+                        (position).toString();
             }
 
             @Override

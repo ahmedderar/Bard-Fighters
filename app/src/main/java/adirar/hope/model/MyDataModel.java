@@ -111,10 +111,10 @@ public class MyDataModel implements ModelInterface{
         result.put(Keys.KEY_NEARESTBRANCH,nearestBranch);
         result.put(Keys.KEY_TYPE,type);
         result.put(Keys.KEY_SHELTER_STATUS,shelterStatus);
-        if (responders.length() >= 1){
-            responders = responders.substring(0,(responders.length()-1));
+      //  if (responders.length() >= 1){
+       //     responders = responders.substring(0,(responders.length()-1));
             result.put(Keys.KEY_RESPONDERS,responders);
-        }
+     //   }
 
         return result;
     }
