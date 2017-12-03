@@ -2,10 +2,8 @@ package adirar.hope;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,17 +17,12 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import adirar.hope.adapter.MyArrayAdapter;
 import adirar.hope.model.MyDataModel;
 import adirar.hope.model.RetrieveInterface;
 import adirar.hope.model.TransferData;
-import adirar.hope.parser.JSONParser;
 import adirar.hope.util.InternetConnection;
 import adirar.hope.util.Keys;
 import adirar.hope.utils.HelperMethods;
@@ -42,6 +35,8 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
 
     private MyDataModel gDataModel;
 
+    ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +44,14 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dialog = new ProgressDialog(ReportsActivity.this);
+        //Get Data from Firebase
+        HelperMethods.getData(ReportsActivity.this, "masterSheet", "Please wait", "Loading");
+       showDialogBar(true);
         /**
          * Array List for Binding Data from JSON to this List
          */
-        list = new ArrayList<>();
+        list = TransferData.reportsArray;
         /**
          * Binding that List to Adapter
          */
@@ -61,31 +60,33 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
         /**
          * Getting List and Setting List Adapter
          */
+        adapter.notifyDataSetChanged();
+        showDialogBar(false);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         // On Item Clicked
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("ReportsActivity","Item Just Clicked");
+                Log.i("ReportsActivity", "Item Just Clicked");
                 Snackbar.make(findViewById(R.id.parentLayout), list.get(position).getName() + " => " + list.get(position).getDate(), Snackbar.LENGTH_LONG).show();
-               //Starting the report Detail
-              //  MyDataModel currentModel
-                       gDataModel = list.get(position);
-                Log.i("ReportsActivity","item Clicked");
-
+                //Starting the report Detail
+                //  MyDataModel currentModel
+                gDataModel = list.get(position);
+                Log.i("ReportsActivity", "item Clicked");
+                TransferData.transModel = TransferData.reportsArray.get(position);
                 // FireBase get responders
-                HelperMethods.getData(ReportsActivity.this,"reports","Please Waiting","Loading");
+               // HelperMethods.getData(ReportsActivity.this, "reports", "Please Waiting", "Loading");
 
-               // TransferData.transModel = currentModel;
-                Intent i = new Intent(ReportsActivity.this,ReportDetailActivity.class);
+                // TransferData.transModel = currentModel;
+                Intent i = new Intent(ReportsActivity.this, ReportDetailActivity.class);
                 /**
-                Bundle b = new Bundle();
-                b.putParcelable(Keys.KEY_RESPONDERS,currentModel);
-                i.putExtras(b);
-             //   i.setClass(ReportsActivity.this, ReportDetailActivity.class);
-                **/
-                 startActivity(i);
+                 Bundle b = new Bundle();
+                 b.putParcelable(Keys.KEY_RESPONDERS,currentModel);
+                 i.putExtras(b);
+                 //   i.setClass(ReportsActivity.this, ReportDetailActivity.class);
+                 **/
+                startActivity(i);
             }
         });
 
@@ -105,7 +106,16 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
                  * Checking Internet Connection
                  */
                 if (InternetConnection.checkConnection(getApplicationContext())) {
-                    new GetDataTask().execute();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                    //  new GetDataTask().execute();
+                  //  showDialogBar(true);
+
+                    //  adapter.notifyDataSetChanged();
+
+                    //   showDialogBar(false);
+
                 } else {
                     Snackbar.make(view, "Internet Connection Not Available", Snackbar.LENGTH_LONG).show();
                 }
@@ -113,156 +123,62 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
         });
     }
 
-    /**
-     * Creating Get Data Task for Getting Data From Web
-     */
-    class GetDataTask extends AsyncTask<Void, Void, Void> {
-
-        ProgressDialog dialog;
-        int jIndex;
-        int x;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            /**
-             * Progress Dialog for User Interaction
-             */
-
-            x=list.size();
-
-            if(x==0)
-                jIndex=0;
-            else
-                jIndex=x;
-
-            dialog = new ProgressDialog(ReportsActivity.this);
-            dialog.setTitle("Hey Wait Please..."+x);
-            dialog.setMessage("I am getting your JSON");
-            dialog.show();
-        }
-
-        @Nullable
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            /**
-             * Getting JSON Object from Web Using okHttp
-             */
-            JSONObject jsonObject = JSONParser.getDataFromWeb();
-
-            try {
-                /**
-                 * Check Whether Its NULL???
-                 */
-                if (jsonObject != null) {
-                    /**
-                     * Check Length...
-                     */
-                    if(jsonObject.length() > 0) {
-                        /**
-                         * Getting Array named "contacts" From MAIN Json Object
-                         */
-                        JSONArray array = jsonObject.getJSONArray(Keys.KEY_CONTACTS);
-
-                        /**
-                         * Check Length of Array...
-                         */
-
-
-                        int lenArray = array.length();
-                        if(lenArray > 0) {
-                            for( ; jIndex < lenArray; jIndex++) {
-
-                                /**
-                                 * Creating Every time New Object
-                                 * and
-                                 * Adding into List
-                                 */
-                                MyDataModel model = new MyDataModel();
-
-                                /**
-                                 * Getting Inner Object from contacts array...
-                                 * and
-                                 * From that We will get Name of that Contact
-                                 *
-                                 */
-                                JSONObject innerObject = array.getJSONObject(jIndex);
-                                String name = innerObject.getString(Keys.KEY_NAME);
-                                String date = innerObject.getString(Keys.KEY_DATE);
-                                String phone = innerObject.getString(Keys.KEY_PHONE);
-                                String areaZone = innerObject.getString(Keys.KEY_AREZONE);
-                                String type = innerObject.getString(Keys.KEY_TYPE);
-                                String nearestBranch = innerObject.getString(Keys.KEY_NEARESTBRANCH);
-                                String address= innerObject.getString(Keys.KEY_ADDRESS);
-                                String shelterStatus = innerObject.getString(Keys.KEY_SHELTER_STATUS);
-//                                String image = innerObject.getString(Keys.KEY_IMAGE);
-                                /**
-                                 * Getting Object from Object "phone"
-                                 */
-                                //JSONObject phoneObject = innerObject.getJSONObject(Keys.KEY_PHONE);
-                                //String phone = phoneObject.getString(Keys.KEY_MOBILE);
-
-                                model.setName(name);
-                                model.setDate(date);
-                                model.setPhoneNo(phone);
-                                model.setAddress(address);
-                                model.setAreaZone(areaZone);
-                                model.setType(type);
-                                model.setNearestBranch(nearestBranch);
-                                model.setShelterStatus(shelterStatus);
-                                //                              model.setImage(image);
-
-                                /**
-                                 * Adding name and phone concatenation in List...
-                                 */
-                                list.add(model);
-                            }
-                        }
-                    }
-                } else {
-
-                }
-            } catch (JSONException je) {
-                Log.i(JSONParser.TAG, "" + je.getLocalizedMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            dialog.dismiss();
-            /**
-             * Checking if List size if more than zero then
-             * Update ListView
-             */
-            if(list.size() > 0) {
-                adapter.notifyDataSetChanged();
-            } else {
-                Snackbar.make(findViewById(R.id.parentLayout), "No Data Found", Snackbar.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     public void updateUI(DataSnapshot data) {
         Log.i("update ui", "updateUI: " + data.toString());
+        ArrayList<MyDataModel> temp = new ArrayList<>();
 
-        boolean isExist = false;
+      //  boolean isExist = false;
         for (DataSnapshot currentChild : data.getChildren()) {
 
-        MyDataModel currentModel = currentChild.getValue(MyDataModel.class);
-            if (currentModel.getName().equals(gDataModel.getName()) && currentModel.getResponders() != null) {
-                isExist = true;
-                TransferData.transModel = currentModel;
-                break;
-            }
-        }
+           MyDataModel currentModel = convetToModel(currentChild);
+         //   GSheetModel currentModel = (GSheetModel) currentChild.getValue();
+                //isExist = true;
+                //TransferData.transModel = currentModel;
+          //  MyDataModel converter = new MyDataModel();
+            //converter.setDate(currentModel.getDate());
+         //   converter.setName(currentModel.getName());
+            temp.add(currentModel);
 
-        if (!isExist) {
-            TransferData.transModel = gDataModel;
         }
+        TransferData.reportsArray = temp;
+
     }
 
+
+    public MyDataModel convetToModel(DataSnapshot dataSnapshot){
+        MyDataModel result = new MyDataModel();
+        long count = dataSnapshot.getChildrenCount();
+        Log.i("ReportsActivity","dataSnapshot Count = " + count);
+        for (DataSnapshot snap : dataSnapshot.getChildren() ){
+            if (snap.getKey().equals(Keys.KEY_NAME))
+            result.setName((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_DATE))
+                result.setDate((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_PHONE))
+                result.setPhoneNo((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_AREZONE))
+                result.setAreaZone((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_ADDRESS))
+                result.setAddress((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_NEARESTBRANCH))
+                result.setNearestBranch((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_TYPE))
+                result.setType((String) snap.getValue());
+            if (snap.getKey().equals(Keys.KEY_SHELTER_STATUS))
+                result.setShelterStatus((String) snap.getValue());
+        }
+        return result;
+    }
+
+    public void showDialogBar(boolean showIt){
+        if (dialog ==null)
+    //    dialog = new ProgressDialog(ReportsActivity.this);
+        dialog.setTitle("Hey Wait Please..." );
+        dialog.setMessage("I am getting your JSON");
+        if (showIt)
+        dialog.show();
+        else dialog.dismiss();
+    }
 }

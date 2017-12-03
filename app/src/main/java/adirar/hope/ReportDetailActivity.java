@@ -96,9 +96,9 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
             // FireBase get responders
             //  HelperMethods.getData(this,"reports","Please Waiting","Loading");
 
-
+            responderArrayList = new ArrayList<>();
             // responderArrayList = getSeperateRespond(myDataModel.getResponders());
-            responderArrayList = getSeperateRespond(myDataModel.getResponders());
+           // responderArrayList = getSeperateRespond(myDataModel.getResponders());
 
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, responderArrayList);
             lvResponders = (ListView) findViewById(R.id.lv_report_responders);
