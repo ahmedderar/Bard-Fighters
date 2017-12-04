@@ -53,9 +53,12 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
         btnRespond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myDataModel.setResponders("ahmed");
-                String id = myDataModel.getName();
-                HelperMethods.pushInFireBase("reports", myDataModel, ReportDetailActivity.this, "loading", "plz wait", id);
+            //    myDataModel.setResponders("ahmed");
+             //   String id = myDataModel.getName();
+                MyDataModel dataModelupdated = TransferData.transModel;
+                dataModelupdated.addResponder(TransferData.transUser.getName());
+                String id = String.valueOf(TransferData.id);
+                HelperMethods.pushInFireBase("masterSheet", myDataModel, ReportDetailActivity.this, "loading", "plz wait", id);
 
 
             }
@@ -97,8 +100,9 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
             //  HelperMethods.getData(this,"reports","Please Waiting","Loading");
 
             responderArrayList = new ArrayList<>();
-            // responderArrayList = getSeperateRespond(myDataModel.getResponders());
-           // responderArrayList = getSeperateRespond(myDataModel.getResponders());
+           if (TransferData.hasRespoders){
+               responderArrayList = getSeperateRespond(myDataModel.getResponders());
+           }
 
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, responderArrayList);
             lvResponders = (ListView) findViewById(R.id.lv_report_responders);
@@ -109,9 +113,16 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
 
     private ArrayList<String> getSeperateRespond(String respons){
         ArrayList<String> result = new ArrayList<>();
-        String[] str = respons.split(",");
-        for ( String string:str){
-            result.add(string);
+        int l = respons.length() - 1 ;
+        if (respons.charAt(l)  != ','){
+            result.add(respons);
+            return  result;
+        }else {
+            String temp = respons.substring(0,l);
+            String[] str = temp.split(",");
+            for (String string : str) {
+                result.add(string);
+            }
         }
     return result;
     }

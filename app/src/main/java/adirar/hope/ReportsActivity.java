@@ -75,8 +75,8 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
                 gDataModel = list.get(position);
                 Log.i("ReportsActivity", "item Clicked");
                 TransferData.transModel = TransferData.reportsArray.get(position);
-                // FireBase get responders
-               // HelperMethods.getData(ReportsActivity.this, "reports", "Please Waiting", "Loading");
+                //Get the index
+                TransferData.id = position + 1 ;
 
                 // TransferData.transModel = currentModel;
                 Intent i = new Intent(ReportsActivity.this, ReportDetailActivity.class);
@@ -128,17 +128,14 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
     public void updateUI(DataSnapshot data) {
         Log.i("update ui", "updateUI: " + data.toString());
         ArrayList<MyDataModel> temp = new ArrayList<>();
-
-      //  boolean isExist = false;
+        int k = 0;
         for (DataSnapshot currentChild : data.getChildren()) {
-
+            if (k==0){
+                k++;
+                continue;
+            }
            MyDataModel currentModel = convetToModel(currentChild);
-         //   GSheetModel currentModel = (GSheetModel) currentChild.getValue();
-                //isExist = true;
-                //TransferData.transModel = currentModel;
-          //  MyDataModel converter = new MyDataModel();
-            //converter.setDate(currentModel.getDate());
-         //   converter.setName(currentModel.getName());
+
             temp.add(currentModel);
 
         }
@@ -168,6 +165,12 @@ public class ReportsActivity extends AppCompatActivity implements RetrieveInterf
                 result.setType((String) snap.getValue());
             if (snap.getKey().equals(Keys.KEY_SHELTER_STATUS))
                 result.setShelterStatus((String) snap.getValue());
+            if (count == 9){
+                if (snap.getKey().equals(Keys.KEY_RESPONDERS)){
+                    result.setResponders((String) snap.getValue());
+                TransferData.hasRespoders = true;
+                }
+            }
         }
         return result;
     }

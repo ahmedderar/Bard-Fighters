@@ -85,9 +85,9 @@ public class MyDataModel implements ModelInterface{
     }
 
     public void addResponder(String responder){
-        if (responders != null)
-        responders += responder + ",";
-        else responders = responder;
+        if (this.responders != null)
+       this.responders += responder + ",";
+        else this.responders = responder;
     }
     public void setResponders(String responders){
         this.responders = responders;

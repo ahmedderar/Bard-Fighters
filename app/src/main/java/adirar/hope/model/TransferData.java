@@ -8,7 +8,9 @@ import java.util.ArrayList;
 
 public class TransferData {
     public static MyDataModel transModel = null;
-    public static Users transUser = null;
+    public static Users transUser = new Users();
+    public static int id = -1 ;
+    public static boolean hasRespoders = false;
     public static ArrayList<MyDataModel> reportsArray = new ArrayList<>();
 
 }
