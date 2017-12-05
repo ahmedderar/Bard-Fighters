@@ -1,7 +1,9 @@
 package adirar.hope;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,7 @@ public class LoginActivity extends AppCompatActivity implements RetrieveInterfac
 
     EditText userNameEditText, passwordEditText;
     Button loginBtn, registerBtn;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +33,19 @@ public class LoginActivity extends AppCompatActivity implements RetrieveInterfac
         loginBtn = (Button) findViewById(R.id.loginBtn);
         registerBtn = (Button) findViewById(R.id.signUpBtn);
 
+         sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HelperMethods.getData(LoginActivity.this, "users", "Please wait", "Loading");
+                //SharedPrefrences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+               // String uName = userNameEditText.getText().toString();
+               // TransferData.userName = uName;
+               // editor.putString("username",uName);
+               // editor.commit();
             }
         });
 
@@ -58,8 +70,11 @@ public class LoginActivity extends AppCompatActivity implements RetrieveInterfac
             Users currentUser = currentChild.getValue(Users.class);
             if (currentUser.getName().equalsIgnoreCase(userNameEditText.getText().toString())
                     && currentUser.getPassword().equalsIgnoreCase(passwordEditText.getText().toString())) {
-                TransferData.transUser = currentUser;
+                TransferData.userName=currentUser.getName();
+                Log.i("LogingActivity","UserName:"+TransferData.userName);
+            //   TransferData.transUser = currentUser;
                 isExist = true;
+
 //                Constants.currentUser= currentUser;
 
                 break;
@@ -68,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements RetrieveInterfac
 
         if (isExist) {
             Intent i = new Intent(LoginActivity.this, ReportsActivity.class);
+            TransferData.userName = userNameEditText.getText().toString();
             startActivity(i);
             finish();
 

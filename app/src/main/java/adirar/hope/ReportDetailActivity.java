@@ -1,7 +1,9 @@
 package adirar.hope;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +38,8 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
 
     ArrayList<String> responderArrayList ;
    ArrayAdapter adapter;
+   SharedPreferences sharedPreferences;
+   String userName;
 
 
     @Override
@@ -47,6 +51,12 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
         myDataModel = TransferData.transModel;
         Log.i("ReportDetailActivity", "dataModel");
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+     //   userName = sharedPreferences.getString("username","NoUser");
+     //   userName = TransferData.transUser.getName();
+         userName= TransferData.userName;
+
+
 
         //Respond btn Clicked
         btnRespond = (Button) findViewById(R.id.btn_report_respond);
@@ -56,7 +66,7 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
             //    myDataModel.setResponders("ahmed");
              //   String id = myDataModel.getName();
                 MyDataModel dataModelupdated = TransferData.transModel;
-                dataModelupdated.addResponder(TransferData.transUser.getName());
+                dataModelupdated.addResponder(userName);
                 String id = String.valueOf(TransferData.id);
                 HelperMethods.pushInFireBase("masterSheet", myDataModel, ReportDetailActivity.this, "loading", "plz wait", id);
 
@@ -113,8 +123,13 @@ public class ReportDetailActivity extends AppCompatActivity implements AddInterf
 
     private ArrayList<String> getSeperateRespond(String respons){
         ArrayList<String> result = new ArrayList<>();
+
+        if (respons == null) {
+            return result;
+        }
+
         int l = respons.length() - 1 ;
-        if (respons.charAt(l)  != ','){
+        if (!respons.contains(",")){
             result.add(respons);
             return  result;
         }else {
