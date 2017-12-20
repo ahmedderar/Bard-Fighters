@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 
 import adirar.hope.model.RetrieveInterface;
+import adirar.hope.model.TransferData;
 import adirar.hope.model.Users;
 import adirar.hope.utils.HelperMethods;
 
@@ -56,6 +57,7 @@ public class VLoginActivity extends AppCompatActivity implements RetrieveInterfa
             Users currentUser = currentChild.getValue(Users.class);
             if (currentUser.getName().equalsIgnoreCase(userNameEditText.getText().toString())
                     && currentUser.getPassword().equalsIgnoreCase(passwordEditText.getText().toString())) {
+           TransferData.userName = currentUser.getName();
                 isExist = true;
 //                Constants.currentUser= currentUser;
                 break;
